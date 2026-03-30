@@ -1,11 +1,29 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import React, { useState } from 'react';
+import { StyleSheet, View, ActivityIndicator } from 'react-native';
+import { WebView } from 'react-native-webview';
 
 export default function App() {
+  const [loading, setLoading] = useState(true);
+
+  // IMPORTANT: Replace this with your Lovable app URL after publishing!
+  const APP_URL = 'https://class-geo-pal.lovable.app';
+
   return (
     <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
+      <WebView
+        source={{ uri: APP_URL }}
+        onLoadStart={() => setLoading(true)}
+        onLoadEnd={() => setLoading(false)}
+        style={styles.webview}
+        javaScriptEnabled={true}
+        domStorageEnabled={true}
+        geolocationEnabled={true}
+      />
+      {loading && (
+        <View style={styles.loading}>
+          <ActivityIndicator size="large" color="#1E3A8A" />
+        </View>
+      )}
     </View>
   );
 }
@@ -13,8 +31,18 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
+  },
+  webview: {
+    flex: 1,
+  },
+  loading: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
     justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'white',
   },
 });
