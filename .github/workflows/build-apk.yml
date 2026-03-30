@@ -17,13 +17,12 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
-          java-version: '17' # Required for modern Android builds
+          java-version: '17'
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '18'
-          cache: 'npm'
           
       - name: Install dependencies
         run: npm install
@@ -31,12 +30,14 @@ jobs:
       - name: Install EAS CLI
         run: npm install -g eas-cli
         
-      - name: Setup Expo
-        run: npx eas login --token ${{ secrets.EXPO_TOKEN }}
+      - name: Verify EAS installation
+        run: eas --version
+        
+      - name: Expo Authentication
+        run: eas login --token ${{ secrets.EXPO_TOKEN }}
         
       - name: Build Android APK
-        # Added --local to ensure the file is created on this runner for the upload step
-        run: npx eas build -p android --profile preview --non-interactive --local --output=./app.apk
+        run: eas build -p android --profile preview --non-interactive --local --output=./app.apk
         
       - name: Upload APK
         uses: actions/upload-artifact@v4
